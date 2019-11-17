@@ -1,18 +1,18 @@
 #include<stdio.h>
 
-
 int layerFinder(int row, int col, int dim)
 {
-// row 0 col 0 to 7
-// col 7 row 0 to 7
-// row 7 col 0 to 7
-// col 0 row 0 to 7
+// row 0 col 0 to dim - first row (left to right)
+// col dim row 0 to dim - last column (top to bottom)
+// row dim col 0 to dim - last row (left to right)
+// col 0 row 0 to dim - first column (top to bottom)
+    
 int no_of_layers, r=0, c=dim-1, layerctr;
-no_of_layers = dim % 2 == 0 ? dim/2 : dim / 2 + 1;
+no_of_layers = dim % 2 == 0 ? dim/2 : dim / 2 + 1; // no_of_layers is based on whether dimension is even or odd.
 for(layerctr = 1; layerctr <= no_of_layers; layerctr++,r++,c--)
 {
     if(row == r && (col >= r && col <=c) || row == c && ( col >= r && col<=c) ||\
-       ( col == c && (row >=r && row <=c )  || ( (col == r) && (row >= r && row <=c)))       )
+       ( col == c && (row >=r && row <=c )  || ( (col == r) && (row >= r && row <=c))))
         break;
 
 }
@@ -33,25 +33,23 @@ int getOffset(int row, int col, int dim)
 }
 int main()
 {
-int row, col, dim = 7
-
-,layer_number, offset=0,newdim, newrow, newcol, ctr;
+int row, col, dim = 7,layer_number, offset=0,newdim, newrow, newcol, ctr;
 
 for(row = 0; row < dim; row++,printf("\n") )
 {
     for(col = 0; col < dim; col++, offset = 0)
     {
         layer_number = layerFinder(row, col, dim);
-//printf("%d ", layer_number);
-for(ctr = 1, newdim = dim; ctr < layer_number; ctr++, newdim-=2)
-    offset += ( newdim + (2 * (newdim - 1)) + (newdim - 2));
-newdim = dim - (2 * (layer_number-1));
-newrow = row - (layer_number - 1);
-newcol = col - (layer_number - 1);
-
-offset  += getOffset(newrow, newcol, newdim);
-printf("%02d ", ((dim * dim) - offset) + 1);
-//printf("%02d ",  offset);
+        for(ctr = 1, newdim = dim; ctr < layer_number; ctr++, newdim-=2)
+        { 
+            offset += ( newdim + (2 * (newdim - 1)) + (newdim - 2));
+        }
+        newdim = dim - (2 * (layer_number-1));
+        newrow = row - (layer_number - 1);
+        newcol = col - (layer_number - 1);
+        offset  += getOffset(newrow, newcol, newdim);
+        printf("%02d ", ((dim * dim) - offset) + 1);
+        //printf("%02d ",  offset);
 
     }
 }
